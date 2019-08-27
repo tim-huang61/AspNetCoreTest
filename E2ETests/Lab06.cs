@@ -32,5 +32,19 @@ namespace E2ETests
             var result = await httpResponseMessage.Content.ReadAsAsync<AuthResult>();
             result.IsAuth.Should().BeFalse();
         }
+
+        [Fact]
+        public async Task HttpService_UnitTest()
+        {
+            var serviceCollection = new ServiceCollection()
+                .AddHttpClient()
+                .AddScoped<IHttpService, HttpService>();
+            using (var serviceScope = serviceCollection.BuildServiceProvider().CreateScope())
+            {
+                var httpService = serviceScope.ServiceProvider.GetRequiredService<IHttpService>();
+                var isAuthAsync = await httpService.IsAuthAsync();
+                isAuthAsync.Should().BeTrue();
+            }
+        }
     }
 }

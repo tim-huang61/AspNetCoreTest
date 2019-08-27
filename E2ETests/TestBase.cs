@@ -31,6 +31,8 @@ namespace E2ETests
                 if (servicesConfiguration != null)
                 {
                     builder.ConfigureTestServices(servicesConfiguration);
+                    // if use autofac
+                    //builder.ConfigureTestContainer()
                 }
 
                 builder.ConfigureServices(config =>
@@ -55,12 +57,17 @@ namespace E2ETests
             return AppWebHost.CreateClient();
         }
 
-        protected void DbOperator(Action<AppDbContext> action)
+        public void DbOperator(Action<AppDbContext> action)
+        {
+            Operator(action);
+        }
+
+        protected void Operator<T>(Action<T> action)
         {
             using (var serviceScope = AppWebHost.Server.Host.Services.CreateScope())
             {
                 // GetRequiredService 如果沒有註冊會直接噴exception.
-                var appDbContext = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var appDbContext = serviceScope.ServiceProvider.GetRequiredService<T>();
                 action.Invoke(appDbContext);
             }
         }
