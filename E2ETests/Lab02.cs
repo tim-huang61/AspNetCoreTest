@@ -21,7 +21,7 @@ namespace E2ETests
             var httpClient = CreateHttpClient();
             var httpResponseMessage = await httpClient.GetAsync("api/Lab022/Index1");
             var result = await httpResponseMessage.Content.ReadAsAsync<ServerHost>();
-            result.Host.Should().Be("192.168.1.101");
+            result.Host.Should().Be("127.0.0.1");
         }
     }
 }

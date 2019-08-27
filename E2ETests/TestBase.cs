@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using AspNetCoreTest201908;
 using AspNetCoreTest201908.Entity;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,8 @@ namespace E2ETests
             // 透過WithWebHostBuilder來建立需要對映的service
             AppWebHost = _factory.WithWebHostBuilder(builder =>
             {
+                // 選擇要測試的config環境
+                builder.UseEnvironment("Test");
                 if (servicesConfiguration != null)
                 {
                     builder.ConfigureTestServices(servicesConfiguration);
