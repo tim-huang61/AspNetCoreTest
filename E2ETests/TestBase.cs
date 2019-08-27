@@ -20,6 +20,7 @@ namespace E2ETests
 
         protected HttpClient CreateHttpClient()
         {
+            // 透過WithWebHostBuilder來建立需要對映的service
             AppWebHost = _factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureServices(config=>
