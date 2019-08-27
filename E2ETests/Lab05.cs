@@ -30,14 +30,12 @@ namespace E2ETests
                     Name = "123"
                 }
             };
-            using (var serviceScope = AppWebHost.Server.Host.Services.CreateScope())
+            DbOperator(appDbContext =>
             {
-                // GetRequiredService 如果沒有註冊會直接噴exception.
-                var appDbContext = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
                 appDbContext.Profile.AddRange(profiles);
-                appDbContext.SaveChanges();
-            }
-
+                appDbContext.SaveChanges(); 
+            });
+            
             var httpResponseMessage = await httpClient.GetAsync("api/Lab05/Index1");
             var result = await httpResponseMessage.Content.ReadAsAsync<List<Profile>>();
             result.Should().BeEquivalentTo(profiles);

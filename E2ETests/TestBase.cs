@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using AspNetCoreTest201908;
 using AspNetCoreTest201908.Entity;
@@ -31,6 +32,16 @@ namespace E2ETests
             });
 
             return AppWebHost.CreateClient();
+        }
+
+        protected void DbOperator(Action<AppDbContext> action)
+        {
+            using (var serviceScope = _factory.Server.Host.Services.CreateScope())
+            {
+                // GetRequiredService 如果沒有註冊會直接噴exception.
+                var appDbContext = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+                action.Invoke(appDbContext);
+            }
         }
     }
 }
