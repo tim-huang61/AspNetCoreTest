@@ -9,7 +9,7 @@ using Xunit;
 
 namespace E2ETests
 {
-    public class TestBase : IClassFixture<WebApplicationFactory<Startup>>
+    public class TestBase : IClassFixture<WebApplicationFactory<Startup>> 
     {
         private readonly WebApplicationFactory<Startup> _factory;
         protected WebApplicationFactory<Startup> AppWebHost;
@@ -27,16 +27,26 @@ namespace E2ETests
                 builder.ConfigureServices(config=>
                 {
                     config.AddDbContext<AppDbContext>(
-                        option => option.UseInMemoryDatabase("memory"));
+//                        option => option.UseInMemoryDatabase("memory")
+                        option => option.UseSqlite("DataSource=name")
+                        );
+
+                    var serviceProvider = config.BuildServiceProvider();
+                    using (var serviceScope = serviceProvider.CreateScope())
+                    {
+                        var appDbContext = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+                        appDbContext.Database.EnsureDeleted();
+                        appDbContext.Database.EnsureCreated();
+                    }
                 });
             });
-
+            
             return AppWebHost.CreateClient();
         }
 
         protected void DbOperator(Action<AppDbContext> action)
         {
-            using (var serviceScope = _factory.Server.Host.Services.CreateScope())
+            using (var serviceScope = AppWebHost.Server.Host.Services.CreateScope())
             {
                 // GetRequiredService 如果沒有註冊會直接噴exception.
                 var appDbContext = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();

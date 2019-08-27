@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using AspNetCoreTest201908;
 using AspNetCoreTest201908.Entity;
+using AspNetCoreTest201908.Model;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,12 +36,26 @@ namespace E2ETests
             DbOperator(appDbContext =>
             {
                 appDbContext.Profile.AddRange(profiles);
-                appDbContext.SaveChanges(); 
+                appDbContext.SaveChanges();
             });
-            
+
             var httpResponseMessage = await httpClient.GetAsync("api/Lab05/Index1");
             var result = await httpResponseMessage.Content.ReadAsAsync<List<Profile>>();
             result.Should().BeEquivalentTo(profiles);
+        }
+
+        [Fact]
+        public async Task Index2()
+        {
+            var profileDto = new ProfileDto {Name = "Tim"};
+            var httpClient = CreateHttpClient();
+            await httpClient.PostAsJsonAsync("api/Lab05/Index2", profileDto);
+            DbOperator(context =>
+            {
+                var profile = context.Profile.First();
+                profile.Id.Should().NotBeEmpty();
+                profile.Name.Should().Be("Tim");
+            });
         }
     }
 }
