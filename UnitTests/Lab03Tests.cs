@@ -3,7 +3,6 @@ using AspNetCoreTest201908.Model;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using Xunit;
 
 namespace UnitTests
