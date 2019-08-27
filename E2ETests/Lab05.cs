@@ -23,7 +23,7 @@ namespace E2ETests
         [Fact]
         public async Task Index()
         {
-            var httpClient = CreateHttpClient();
+            var httpClient = CreateHttpClient(config => { config.AddScoped<IHttpService, FakeHttpService>(); });
             // 不能透過Services取得,須透過create scope
             var profiles = new List<Profile>
             {
@@ -47,7 +47,7 @@ namespace E2ETests
         [Fact]
         public async Task Index3()
         {
-            var httpClient = CreateHttpClient();
+            var httpClient = CreateHttpClient(config => { config.AddScoped<IHttpService, FakeHttpService>(); });
             // 不能透過Services取得,須透過create scope
             var profiles = new List<Profile>
             {
@@ -75,7 +75,7 @@ namespace E2ETests
         public async Task Index2()
         {
             var profileDto = new ProfileDto {Name = "Tim"};
-            var httpClient = CreateHttpClient();
+            var httpClient = CreateHttpClient(config => { config.AddScoped<IHttpService, FakeHttpService>(); });
             await httpClient.PostAsJsonAsync("api/Lab05/Index2", profileDto);
             DbOperator(context =>
             {

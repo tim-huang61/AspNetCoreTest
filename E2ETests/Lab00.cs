@@ -4,6 +4,7 @@ using AspNetCoreTest201908;
 using AspNetCoreTest201908.Model;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace E2ETests
@@ -23,7 +24,7 @@ namespace E2ETests
         [Fact]
         public async Task Test()
         {
-            var httpClient = _factory.CreateClient();
+            var httpClient = CreateHttpClient(config => { config.AddScoped<IHttpService, FakeHttpService>(); });
             var httpResponseMessage = await httpClient.GetAsync("api/Lab00/Index");
             var result = await httpResponseMessage.Content.ReadAsAsync<AuthResult>();
             result.IsAuth.Should().BeTrue();
