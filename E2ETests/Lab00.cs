@@ -13,11 +13,8 @@ namespace E2ETests
     // WebApplicationFactory : 建立內建web application
     public class Lab00 : TestBase
     {
-        private readonly WebApplicationFactory<Startup> _factory;
-
         public Lab00(WebApplicationFactory<Startup> factory) : base(factory)
         {
-            _factory = factory;
         }
 
         // host建立記憶體
