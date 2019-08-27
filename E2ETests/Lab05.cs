@@ -45,6 +45,33 @@ namespace E2ETests
         }
 
         [Fact]
+        public async Task Index3()
+        {
+            var httpClient = CreateHttpClient();
+            // 不能透過Services取得,須透過create scope
+            var profiles = new List<Profile>
+            {
+                new Profile
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "123"
+                }
+            };
+            DbOperator(appDbContext =>
+            {
+                appDbContext.Profile.AddRange(profiles);
+                appDbContext.SaveChanges();
+            });
+
+            var httpResponseMessage = await httpClient.GetAsync("api/Lab05/Index1");
+            var result = await httpResponseMessage.Content.ReadAsAsync<List<VProfile>>();
+            result.Should().BeEquivalentTo(profiles.Select(p=> new VProfile
+            {
+                Name = p.Name
+            }));
+        }
+
+        [Fact]
         public async Task Index2()
         {
             var profileDto = new ProfileDto {Name = "Tim"};

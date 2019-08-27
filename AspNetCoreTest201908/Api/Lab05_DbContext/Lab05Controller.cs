@@ -38,5 +38,11 @@ namespace AspNetCoreTest201908.Api.Lab05_DbContext
             
             return Ok(profile);
         }
+        
+        [HttpGet]
+        public async Task<IActionResult> Index3()
+        {
+            return Ok(await _dbContext.VProfile.ToListAsync());
+        }
     }
 }

@@ -37,6 +37,8 @@ namespace E2ETests
                         var appDbContext = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
                         appDbContext.Database.EnsureDeleted();
                         appDbContext.Database.EnsureCreated();
+                        appDbContext.Database.ExecuteSqlCommand(
+                            @"CREATE VIEW VProfile AS SELECT Name From Profile");
                     }
                 });
             });
